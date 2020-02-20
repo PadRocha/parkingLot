@@ -1,0 +1,227 @@
+/* You can add global styles to this file, and also import other style files */
+
+.navigation-clean {
+  background: #fff;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  color: #333;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  margin-bottom: 0;
+
+  .navbar-brand {
+    font-weight: bold;
+    color: inherit;
+
+    &:hover {
+      color: #222;
+    }
+  }
+
+  &.navbar-dark .navbar-brand:hover {
+    color: #f0f0f0;
+  }
+
+  .navbar-brand img {
+    height: 100%;
+    display: inline-block;
+    margin-right: 10px;
+    width: auto;
+  }
+
+  .navbar-toggler {
+    border-color: #ddd;
+
+    &:hover,
+    &:focus {
+      background: none;
+    }
+  }
+
+  &.navbar-dark .navbar-toggler {
+    border-color: #555;
+  }
+
+  .navbar-toggler {
+    color: #888;
+  }
+
+  &.navbar-dark .navbar-toggler {
+    color: #eee;
+  }
+
+  .navbar-collapse,
+  .form-inline {
+    border-top-color: #ddd;
+  }
+
+  &.navbar-dark {
+    .navbar-collapse,
+    .form-inline {
+      border-top-color: #333;
+    }
+  }
+
+  .navbar-nav > {
+    .active > a,
+    .show > a {
+      background: none;
+      box-shadow: none;
+    }
+  }
+
+  &.navbar-light .navbar-nav .nav-link.active {
+    color: #8f8f8f;
+    box-shadow: none;
+    background: none;
+    pointer-events: none;
+
+    &:focus,
+    &:hover {
+      color: #8f8f8f;
+      box-shadow: none;
+      background: none;
+      pointer-events: none;
+    }
+  }
+
+  &.navbar .navbar-nav .nav-link {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  &.navbar-light .navbar-nav .nav-link {
+    color: #465765;
+
+    &:focus,
+    &:hover {
+      color: #37434d !important;
+      background-color: transparent;
+    }
+  }
+
+  .navbar-nav > li > .dropdown-menu {
+    margin-top: -5px;
+    box-shadow: none;
+    background-color: #fff;
+    border-radius: 2px;
+  }
+
+  .dropdown-menu .dropdown-item {
+    &:focus {
+      line-height: 2;
+      color: #37434d;
+      background: #eee;
+      color: inherit;
+    }
+
+    line-height: 2;
+    color: #37434d;
+
+    &:hover {
+      background: #eee;
+      color: inherit;
+    }
+  }
+
+  &.navbar-dark {
+    background-color: #1f2021;
+    color: #fff;
+
+    .navbar-nav {
+      a.active {
+        color: #8f8f8f;
+        box-shadow: none;
+        background: none;
+        pointer-events: none;
+
+        &:focus,
+        &:hover {
+          color: #8f8f8f;
+          box-shadow: none;
+          background: none;
+          pointer-events: none;
+        }
+      }
+
+      .nav-link {
+        color: #dfe8ee;
+
+        &:focus,
+        &:hover {
+          color: #fff;
+          background-color: transparent;
+        }
+      }
+
+      > li > .dropdown-menu {
+        background-color: #1f2021;
+      }
+    }
+
+    .dropdown-menu .dropdown-item {
+      &:focus {
+        color: #f2f5f8;
+        background: #363739;
+      }
+
+      color: #f2f5f8;
+
+      &:hover {
+        background: #363739;
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .navigation-clean {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .navigation-clean .navbar-nav .show .dropdown-menu {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (max-width: 767px) {
+  .navigation-clean .navbar-nav .show .dropdown-menu .dropdown-item {
+    color: #37434d;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    line-height: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .navigation-clean.navbar-dark .navbar-nav .show .dropdown-menu .dropdown-item {
+    color: #fff;
+  }
+}
+
+.table-fit {
+  tbody {
+    display: block;
+    height: 402px;
+    overflow: auto;
+  }
+
+  thead,
+  tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  thead {
+    width: calc(100% - 1em);
+  }
+
+  table {
+    width: 400px;
+  }
+}
