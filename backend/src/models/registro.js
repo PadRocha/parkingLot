@@ -9,14 +9,6 @@ const mongoose = require('mongoose'); //* Calls mongoose
 const Schema = mongoose.Schema;
 
 const registroSchema = new Schema({
-    ingreso: {
-        type: Date,
-        default: Date.now
-    },
-    salida: {
-        type: Date,
-        default: Date.now
-    },
     cliente: {
         type: Schema.Types.ObjectId,
         ref: 'Cliente',
@@ -25,6 +17,14 @@ const registroSchema = new Schema({
     vehiculo: {
         type: Schema.Types.ObjectId,
         ref: 'Vehiculo'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    updatedAt: {
+        type: Date,
+        default: null
     }
 });
 

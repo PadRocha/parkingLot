@@ -9,14 +9,6 @@ const mongoose = require('mongoose'); //* Calls mongoose
 const Schema = mongoose.Schema;
 
 const subscripcionSchema = new Schema({
-    start: {
-        type: Date,
-        default: Date.now
-    },
-    end: {
-        type: Date,
-        default: Date.now
-    },
     cliente: {
         type: Schema.Types.ObjectId,
         ref: 'Cliente',
@@ -29,9 +21,15 @@ const subscripcionSchema = new Schema({
     cajon: {
         type: Schema.Types.ObjectId,
         ref: 'Cajon'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    updatedAt: {
+        type: Date,
+        default: null
     }
-}, {
-    timestamps: true
 });
 
 /*------------------------------------------------------------------*/

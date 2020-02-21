@@ -9,13 +9,15 @@ const mongoose = require('mongoose'); //* Calls mongoose
 const Schema = mongoose.Schema;
 
 const cajonSchema = new Schema({
-    name: {
-        type: String,
+    number: {
+        type: Number,
         required: true,
-        trim: true,
         unique: true
     },
-    available: Boolean,
+    available: {
+        type: Boolean,
+        default: true
+    },
     lote: {
         type: Schema.Types.ObjectId,
         ref: 'Lote'

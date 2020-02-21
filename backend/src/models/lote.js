@@ -13,9 +13,13 @@ const loteSchema = new Schema({
         type: String,
         required: true,
         trim: true,
+        uppercase: true,
         unique: true
     },
-    ocupated: Boolean
+    available: {
+        type: Boolean,
+        default: true
+    }
 });
 
 /*------------------------------------------------------------------*/
