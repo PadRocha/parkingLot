@@ -1,4 +1,4 @@
-'use Strict'
+'use strict'
 
 /*------------------------------------------------------------------*/
 // Modelo de user.js
@@ -10,8 +10,23 @@ const bcryptjs = require('bcryptjs'); //* Calls bcryptjs
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    nickname: String,
-    password: String
+    nickname: {
+        type: String,
+        required: true,
+        trim: true,
+        lowercase: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    role: {
+        type: String,
+        default: 'user',
+        required: true
+    }
 });
 
 userSchema.pre('save', function (next) {

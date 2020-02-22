@@ -1,4 +1,4 @@
-'use Strict'
+'use strict'
 
 /*------------------------------------------------------------------*/
 // Controlador de cajon.js
@@ -8,7 +8,9 @@ const Cajon = require('../models/cajon'); //* Calls cajon.js model
 
 const cajonController = {
     saveCajon(req, res) {
-        const newCajon = new Cajon(req.body);
+        const newCajon = new Cajon(req.body, (err) => {
+            if (err) return res.status(400).send({ error: 'Bad Request' });
+        });
         newCajon.save((err, cajonStored) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!cajonStored) return res.status(204).send({ error: 'Cajon No Content' });
@@ -40,7 +42,12 @@ const cajonController = {
         });
     },
     deleteCajon(req, res) {
-        //
+        if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
+        Cajon.findOneAndDelete(req.params.id, (err, cajonDeleted) => {
+            if (err) return res.status(500).send({ error: 'Internal Server Error' });
+            if (!cajonDeleted) return res.status(404).send({ error: 'Cliente Not Found' });
+            return res.status(200).send({ data: cajonDeleted });
+        });
     }//,
 };
 

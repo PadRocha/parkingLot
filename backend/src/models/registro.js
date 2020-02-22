@@ -1,4 +1,4 @@
-'use Strict'
+'use strict'
 
 /*------------------------------------------------------------------*/
 // Modelo de registro.js
@@ -9,14 +9,10 @@ const mongoose = require('mongoose'); //* Calls mongoose
 const Schema = mongoose.Schema;
 
 const registroSchema = new Schema({
-    cliente: {
-        type: Schema.Types.ObjectId,
-        ref: 'Cliente',
-        required: true
-    },
     vehiculo: {
         type: Schema.Types.ObjectId,
-        ref: 'Vehiculo'
+        ref: 'Vehiculo',
+        required: true
     },
     createdAt: {
         type: Date,

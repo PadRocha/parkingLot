@@ -11,7 +11,7 @@ const URI = process.env.MONGO_URI ? process.env.MONGO_URI : 'mongodb://localhost
 mongoose.connect(URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: true,
+    useFindAndModify: false,
     useUnifiedTopology: true
 }, err => {
     if (err) console.log('Error! > ' + err);

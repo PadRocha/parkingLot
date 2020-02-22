@@ -1,4 +1,4 @@
-'use Strict'
+'use strict'
 
 /*------------------------------------------------------------------*/
 // Modelo de cajon.js
@@ -12,7 +12,7 @@ const cajonSchema = new Schema({
     number: {
         type: Number,
         required: true,
-        unique: true
+        unique: false
     },
     available: {
         type: Boolean,
@@ -20,7 +20,8 @@ const cajonSchema = new Schema({
     },
     lote: {
         type: Schema.Types.ObjectId,
-        ref: 'Lote'
+        ref: 'Lote',
+        required: true
     }
 });
 

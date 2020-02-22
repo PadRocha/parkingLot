@@ -1,4 +1,4 @@
-'use Strict'
+'use strict'
 
 /*------------------------------------------------------------------*/
 // Controlador de lote.js
@@ -16,7 +16,9 @@ const loteController = {
     },
     saveLote(req, res) {
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
-        const newLote = new Lote(req.body);
+        const newLote = new Lote(req.body, (err) => {
+            if (err) return res.status(400).send({ error: 'Bad Request' });
+        });
         newLote.save((err, loteStored) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!loteStored) return res.status(204).send({ error: 'Lote No Content' });

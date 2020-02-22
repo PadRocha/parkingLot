@@ -7,8 +7,10 @@ const userController = require('../controllers/user'); //* Calls the module cont
 const clienteController = require('../controllers/cliente'); //* Calls the module controllers/cliente.js
 const loteController = require('../controllers/lote'); //* Calls the module controllers/lote.js
 const cajonController = require('../controllers/cajon'); //* Calls the module controllers/cajon.js
+const vehiculoController = require('../controllers/vehiculo'); //* Calls the module controllers/vehiculo.js
+const registroController = require('../controllers/registro'); //* Calls the module controllers/registro.js
 
-const md_auth = require('../middlewares/auth');
+const mdAuth = require('../middlewares/auth'); //* Calls Security
 
 /*------------------------------------------------------------------*/
 // User routes
@@ -18,7 +20,7 @@ router.route('/')
     .get();
 
 router.route('/register')
-    .post(md_auth.authorized, userController.registerUser);
+    .post(mdAuth.authorized, userController.registerUser);
 
 router.route('/login')
     .post(userController.loginUser);
@@ -28,29 +30,29 @@ router.route('/login')
 /*------------------------------------------------------------------*/
 
 router.route('/cliente')
-    .get(md_auth.authorized, clienteController.listarCliente)
-    .post(md_auth.authorized, clienteController.saveCliente);
+    .get(mdAuth.authorized, clienteController.listarCliente)
+    .post(clienteController.saveCliente);
 
 router.route('/cliente/:id')
-    .get(md_auth.authorized, clienteController.getCliente)
-    .put(md_auth.authorized, clienteController.updateCliente)
-    .delete(md_auth.authorized, clienteController.deleteCliente);
+    .get(mdAuth.authorized, clienteController.getCliente)
+    .put(mdAuth.authorized, clienteController.updateCliente)
+    .delete(mdAuth.authorized, clienteController.deleteCliente);
 
 router.route('/cliente/:type/:param')
-    .get(md_auth.authorized, clienteController.consultarCliente);
+    .get(mdAuth.authorized, clienteController.consultarCliente);
 
 /*------------------------------------------------------------------*/
 // Lote routes
 /*------------------------------------------------------------------*/
 
 router.route('/lote')
-    .get(md_auth.authorized, loteController.listarLote)
-    .post(md_auth.authorized, loteController.saveLote);
+    .get(mdAuth.authorized, loteController.listarLote)
+    .post(mdAuth.authorized, loteController.saveLote);
 
 router.route('/lote/:id')
-    .get(md_auth.authorized, loteController.getLote)
-    .put(md_auth.authorized, loteController.updateLote)
-    .delete(md_auth.authorized, loteController.deleteLote);
+    .get(mdAuth.authorized, loteController.getLote)
+    .put(mdAuth.authorized, loteController.updateLote)
+    .delete(mdAuth.authorized, loteController.deleteLote);
 
 /*------------------------------------------------------------------*/
 // Cajon routes
@@ -64,6 +66,32 @@ router.route('/cajon/:id')
     .get(cajonController.getCajon)
     .put(cajonController.updateCajon)
     .delete(cajonController.deleteCajon);
+
+/*------------------------------------------------------------------*/
+// Vehiculo routes
+/*------------------------------------------------------------------*/
+
+router.route('/vehiculo')
+    .get(vehiculoController.listarVehiculo)
+    .post(vehiculoController.saveVehiculo);
+
+router.route('/vehiculo/:id')
+    .get(vehiculoController.getVehiculo)
+    .put(vehiculoController.updateVehiculo)
+    .delete(vehiculoController.deleteVehiculo);
+
+/*------------------------------------------------------------------*/
+// Registro routes
+/*------------------------------------------------------------------*/
+
+router.route('/registro')
+    .get(registroController.listarRegistro)
+    .post(registroController.saveRegistro);
+
+router.route('/registro/:id')
+    .get(registroController.getRegistro)
+    .put(registroController.updateRegistro)
+    .delete(registroController.deleteRegistro);
 
 /*------------------------------------------------------------------*/
 

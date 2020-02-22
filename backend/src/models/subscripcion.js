@@ -1,4 +1,4 @@
-'use Strict'
+'use strict'
 
 /*------------------------------------------------------------------*/
 // Modelo de subscripcion.js
@@ -9,11 +9,6 @@ const mongoose = require('mongoose'); //* Calls mongoose
 const Schema = mongoose.Schema;
 
 const subscripcionSchema = new Schema({
-    cliente: {
-        type: Schema.Types.ObjectId,
-        ref: 'Cliente',
-        required: true
-    },
     vehiculo: {
         type: Schema.Types.ObjectId,
         ref: 'Vehiculo'

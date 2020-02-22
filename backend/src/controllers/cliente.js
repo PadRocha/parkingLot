@@ -9,8 +9,10 @@ const Cliente = require('../models/cliente'); //* Calls cliente.js model
 const clienteController = {
     saveCliente(req, res) {
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
-        const newCliente = new Cliente(req.body);
-        newCliente.image = req.file.filename ? req.file.filename : null;
+        const newCliente = new Cliente(req.body, (err) => {
+            if (err) return res.status(400).send({ error: 'Bad Request' });
+        });
+        newCliente.image = req.file ? req.file.filename : null;
         newCliente.save((err, clienteStored) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!clienteStored) return res.status(204).send({ error: 'Cliente No Content' });

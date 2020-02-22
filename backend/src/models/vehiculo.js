@@ -1,4 +1,4 @@
-'use Strict'
+'use strict'
 
 /*------------------------------------------------------------------*/
 // Modelo de vehiculo.js
@@ -23,15 +23,14 @@ const vehiculoSchema = new Schema({
         type: String,
         trim: true
     },
-    color: String,
+    color: {
+        type: String,
+        maxlength: 7
+    },
     cliente: {
         type: Schema.Types.ObjectId,
         ref: 'Cliente',
         required: true
-    },
-    cajon: {
-        type: Schema.Types.ObjectId,
-        ref: 'Cajon'
     }
 });
 
