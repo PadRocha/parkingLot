@@ -9,6 +9,7 @@ const loteController = require('../controllers/lote'); //* Calls the module cont
 const cajonController = require('../controllers/cajon'); //* Calls the module controllers/cajon.js
 const vehiculoController = require('../controllers/vehiculo'); //* Calls the module controllers/vehiculo.js
 const registroController = require('../controllers/registro'); //* Calls the module controllers/registro.js
+const subscripcionController = require('../controllers/subscripcion'); //* Calls the module controllers/subscripcion.js
 
 const mdAuth = require('../middlewares/auth'); //* Calls Security
 
@@ -92,6 +93,19 @@ router.route('/registro/:id')
     .get(registroController.getRegistro)
     .put(registroController.updateRegistro)
     .delete(registroController.deleteRegistro);
+
+/*------------------------------------------------------------------*/
+// Subscripcion routes
+/*------------------------------------------------------------------*/
+
+router.route('/subscripcion')
+    .get(subscripcionController.listarSubscripcion)
+    .post(subscripcionController.saveSubscripcion);
+
+router.route('/subscripcion/:id')
+    .get(subscripcionController.getSubscripcion)
+    .put(subscripcionController.updateSubscripcion)
+    .delete(subscripcionController.deleteSubscripcion);
 
 /*------------------------------------------------------------------*/
 

@@ -19,7 +19,7 @@ const registroController = {
         });
     },
     listarRegistro(req, res) {
-        Registro.find({}).exec((err, registro) => {
+        Registro.find({}).populate({ path: 'vehiculo', populate: { path: 'cliente', select: 'name' } }).exec((err, registro) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!registro) return res.status(404).send({ error: 'Registro Not Found' });
             return res.status(200).send({ data: registro });
@@ -27,7 +27,7 @@ const registroController = {
     },
     getRegistro(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
-        Registro.findById(req.params.id).exec((err, registro) => {
+        Registro.findById(req.params.id).populate({ path: 'vehiculo', populate: { path: 'cliente', select: 'name' } }).exec((err, registro) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!registro) return res.status(404).send({ error: 'Registro Not Found' });
             return res.status(200).send({ data: registro });
