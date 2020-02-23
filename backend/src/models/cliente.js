@@ -16,6 +16,11 @@ const clienteSchema = new Schema({
         lowercase: true,
         unique: true
     },
+    phone: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     license: {
         type: String,
         required: true

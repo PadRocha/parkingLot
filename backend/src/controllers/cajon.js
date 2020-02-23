@@ -16,7 +16,7 @@ const cajonController = {
         });
     },
     listarCajon(req, res) {
-        Cajon.find({}).populate('lote').exec((err, cajon) => {
+        Cajon.find({}).populate({ path: 'lote' }).sort('number').exec((err, cajon) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!cajon) return res.status(204).send({ error: 'Cajon No Content' });
             return res.status(200).send({ data: cajon });
@@ -24,7 +24,7 @@ const cajonController = {
     },
     getCajon(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
-        Cajon.findById(req.params.id).populate('lote').exec((err, cajon) => {
+        Cajon.findById(req.params.id).populate('lote', '-__v').exec((err, cajon) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!cajon) return res.status(404).send({ error: 'Cliente Not Found' });
             return res.status(200).send({ data: cajon });

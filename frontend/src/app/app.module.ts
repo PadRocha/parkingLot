@@ -17,6 +17,8 @@ import { LoginComponent } from './components/login/login.component';
 
 import { AuthService } from './services/auth.service';
 import { TokenInterceptorService } from './services/token-interceptor.service';
+import { ShippingService } from './services/shipping.service';
+import { ArrivalsService } from './services/arrivals.service';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -41,6 +43,8 @@ import { AuthGuard } from './guards/auth.guard';
     appRoutingProviders,
     AuthService,
     AuthGuard,
+    ShippingService,
+    ArrivalsService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,

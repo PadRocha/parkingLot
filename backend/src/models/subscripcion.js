@@ -26,6 +26,11 @@ const subscripcionSchema = new Schema({
     end: {
         type: Date,
         required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+        required: true
     }
 });
 

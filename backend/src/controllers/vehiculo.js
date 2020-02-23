@@ -17,15 +17,23 @@ const vehiculoController = {
     saveVehiculo(req, res) {
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
         const newVehiculo = new Vehiculo(req.body);
-        newVehiculo.save((err, vehiculoStored) => {
+
+        const Cliente = require('../models/cliente'); //* Calls cliente.js model
+
+        Cliente.findOne({ name: new RegExp(req.body.name, 'i') }).exec((err, cliente) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
-            if (!vehiculoStored) return res.status(204).send({ error: 'Vehiculo No Content' });
-            return res.status(200).send({ data: vehiculoStored });
+            if (!cliente) return res.status(404).send({ error: 'Cliente Not Found' });
+            newVehiculo.cliente = cliente._id;
+            newVehiculo.save((err, vehiculoStored) => {
+                if (err) return res.status(500).send({ error: 'Internal Server Error' });
+                if (!vehiculoStored) return res.status(204).send({ error: 'Vehiculo No Content' });
+                return res.status(200).send({ data: vehiculoStored });
+            });
         });
     },
     getVehiculo(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
-        Vehiculo.findById(req.params.id).populate('cliente').exec((err, vehiculo) => {
+        Vehiculo.findById(req.params.id).populate('cliente', 'name').exec((err, vehiculo) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!vehiculo) return res.status(404).send({ error: 'Vehiculo Not Found' });
             return res.status(200).send({ data: vehiculo });
@@ -41,8 +49,13 @@ const vehiculoController = {
         });
     },
     deleteVehiculo(req, res) {
-        //
-    }//,
+        if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
+        Vehiculo.findOneAndDelete(req.params.id, (err, vehiculoDeleted) => {
+            if (err) return res.status(500).send({ error: 'Internal Server Error' });
+            if (!vehiculoDeleted) return res.status(404).send({ error: 'Vehiculo Not Found' });
+            return res.status(200).send({ data: vehiculoDeleted });
+        });
+    },
 };
 
 /*------------------------------------------------------------------*/

@@ -13,10 +13,10 @@ const registroController = {
 
         const Subscripcion = require('../models/subscripcion'); //* Calls subscripcion.js model
 
-        Subscripcion.findOne({ vehiculo: newRegistro.vehiculo, end: { $gt: Date.now() } }).exec((err, subscripcion) => {
+        Subscripcion.findOne({ matricula: newRegistro.matricula, end: { $gt: Date.now() } }).exec((err, subscripcion) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!subscripcion) return res.status(401).send({ error: 'Unauthorized Subscripcion' });
-            Registro.findOne({ vehiculo: newRegistro.vehiculo, updatedAt: null }).exec((err, registro) => {
+            Registro.findOne({ matricula: newRegistro.matricula, updatedAt: null }).exec((err, registro) => {
                 if (err) return res.status(500).send({ error: 'Internal Server Error' });
                 if (registro) return res.status(401).send({ error: 'Unauthorized Registro' });
                 newRegistro.save((err, registroStored) => {
@@ -28,7 +28,7 @@ const registroController = {
         });
     },
     listarRegistro(req, res) {
-        Registro.find({}).populate({ path: 'vehiculo', populate: { path: 'cliente', select: 'name' } }).exec((err, registro) => {
+        Registro.find({}).populate({ path: 'vehiculo', select: '-__v', populate: { path: 'cliente', select: 'name' } }).exec((err, registro) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!registro) return res.status(404).send({ error: 'Registro Not Found' });
             return res.status(200).send({ data: registro });
@@ -36,7 +36,7 @@ const registroController = {
     },
     getRegistro(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
-        Registro.findById(req.params.id).populate({ path: 'vehiculo', populate: { path: 'cliente', select: 'name' } }).exec((err, registro) => {
+        Registro.findById(req.params.id).populate({ path: 'vehiculo', select: '-__v', populate: { path: 'cliente', select: 'name' } }).exec((err, registro) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!registro) return res.status(404).send({ error: 'Registro Not Found' });
             return res.status(200).send({ data: registro });
@@ -57,7 +57,7 @@ const registroController = {
             if (!registroDeleted) return res.status(404).send({ error: 'Registro Not Found' });
             return res.status(200).send({ data: registroDeleted });
         });
-    },
+    }//,
 };
 
 /*------------------------------------------------------------------*/

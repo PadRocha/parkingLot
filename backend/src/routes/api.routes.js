@@ -2,7 +2,6 @@
 
 const router = require('express').Router(); //* Calls the Router of express
 
-
 const userController = require('../controllers/user'); //* Calls the module controllers/user.js
 const clienteController = require('../controllers/cliente'); //* Calls the module controllers/cliente.js
 const loteController = require('../controllers/lote'); //* Calls the module controllers/lote.js
@@ -21,7 +20,7 @@ router.route('/')
     .get();
 
 router.route('/register')
-    .post(mdAuth.authorized, userController.registerUser);
+    .post(mdAuth.authAdmin, userController.registerUser);
 
 router.route('/login')
     .post(userController.loginUser);
@@ -31,29 +30,29 @@ router.route('/login')
 /*------------------------------------------------------------------*/
 
 router.route('/cliente')
-    .get(mdAuth.authorized, clienteController.listarCliente)
+    .get(clienteController.listarCliente)
     .post(clienteController.saveCliente);
 
 router.route('/cliente/:id')
-    .get(mdAuth.authorized, clienteController.getCliente)
-    .put(mdAuth.authorized, clienteController.updateCliente)
-    .delete(mdAuth.authorized, clienteController.deleteCliente);
+    .get(clienteController.getCliente)
+    .put(clienteController.updateCliente)
+    .delete(clienteController.deleteCliente);
 
 router.route('/cliente/:type/:param')
-    .get(mdAuth.authorized, clienteController.consultarCliente);
+    .get(clienteController.consultarCliente);
 
 /*------------------------------------------------------------------*/
 // Lote routes
 /*------------------------------------------------------------------*/
 
 router.route('/lote')
-    .get(mdAuth.authorized, loteController.listarLote)
-    .post(mdAuth.authorized, loteController.saveLote);
+    .get(loteController.listarLote)
+    .post(loteController.saveLote);
 
 router.route('/lote/:id')
-    .get(mdAuth.authorized, loteController.getLote)
-    .put(mdAuth.authorized, loteController.updateLote)
-    .delete(mdAuth.authorized, loteController.deleteLote);
+    .get(loteController.getLote)
+    .put(loteController.updateLote)
+    .delete(loteController.deleteLote);
 
 /*------------------------------------------------------------------*/
 // Cajon routes

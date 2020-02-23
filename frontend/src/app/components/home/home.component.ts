@@ -1,16 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+// import {FormsModule} from '@angular/forms'
+
 import { Router } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, Observable } from 'rxjs';
 import { WebcamImage, WebcamInitError, WebcamUtil } from 'ngx-webcam';
+import { ShippingService } from 'src/app/services/shipping.service';
+import { ArrivalsService } from 'src/app/services/arrivals.service';
+import { Cliente } from 'src/app/models/cliente';
+import { Vehiculo } from 'src/app/models/vehiculo';
+import { Registro } from 'src/app/models/registro';
+import { Subscripcion } from 'src/app/models/subscripcion';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
+  // imports: [FormsModule]
 })
 export class HomeComponent implements OnInit {
+  /*------------------------------------------------------------------*/
+  // Forms
+  /*------------------------------------------------------------------*/
+
+  public clientes: Cliente;
+  public vehiculos: Vehiculo;
+  public registros: Registro;
+  public subscripcions: Subscripcion;
+
   /*------------------------------------------------------------------*/
   // Variables
   /*------------------------------------------------------------------*/
@@ -28,12 +46,30 @@ export class HomeComponent implements OnInit {
   public multipleWebcamsAvailable: Boolean = false;
   public errorsCamera: WebcamInitError[] = [];
   public webcamImage: WebcamImage = null;
+  public errors: WebcamInitError[] = [];
   private trigger: Subject<void> = new Subject<void>();
+
+  /*------------------------------------------------------------------*/
+  // Constructor
+  /*------------------------------------------------------------------*/
 
   constructor(
     private _modalService: NgbModal,
-    private _router: Router
-  ) { }
+    private _router: Router,
+    private _shippingService: ShippingService
+  ) {
+    this.clientes = new Cliente('', '', '', '', '', '', '');
+    this.vehiculos = new Vehiculo('', '', '', '', '', '');
+    this.registros = new Registro('', '');
+    this.subscripcions = new Subscripcion('', '', 1, '');
+  }
+
+  ngOnInit(): void {
+    WebcamUtil.getAvailableVideoInputs()
+      .then((mediaDevices: MediaDeviceInfo[]) => {
+        this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
+      });
+  }
 
   /*------------------------------------------------------------------*/
   // Funciones Modal
@@ -73,7 +109,6 @@ export class HomeComponent implements OnInit {
   }
 
   public handleImage(webcamImage: WebcamImage): void { //* Guarda la imagen en variable
-    console.info('received webcam image', webcamImage);
     this.webcamImage = webcamImage;
   }
 
@@ -90,11 +125,45 @@ export class HomeComponent implements OnInit {
     this.errorsCamera.push(error);
   }
 
-  ngOnInit(): void {
-    WebcamUtil.getAvailableVideoInputs()
-      .then((mediaDevices: MediaDeviceInfo[]) => {
-        this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
-      });
+  public turnToFile(): Blob { //* Convierte la imagen a Blob
+    var byteString;
+    if (this.webcamImage.imageAsDataUrl.split(',')[0].indexOf('base64') >= 0)
+      byteString = atob(this.webcamImage.imageAsDataUrl.split(',')[1]);
+    else
+      byteString = unescape(this.webcamImage.imageAsDataUrl.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = this.webcamImage.imageAsDataUrl.split(',')[0].split(':')[1].split(';')[0];
+
+    // write the bytes of the string to a typed array
+    var ia = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ia], { type: mimeString });
   }
 
+  /*------------------------------------------------------------------*/
+  // Submits
+  /*------------------------------------------------------------------*/
+
+  public onSubmitCliente(form) {
+    let fd: any = new FormData();
+    fd.append('name', this.clientes.name);
+    fd.append('phone', this.clientes.phone);
+    fd.append('license', this.clientes.license);
+    fd.append('typeLicense', this.clientes.typeLicense);
+    fd.append('image', this.turnToFile());
+    fd.append('avales', this.clientes.avales)
+    this._shippingService.cliente(fd).subscribe(
+      res => {
+        console.log(res);
+
+      },
+      err => {
+        console.log(<any>err);
+      }
+    );
+  }
 }

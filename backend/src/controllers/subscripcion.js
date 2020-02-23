@@ -47,19 +47,21 @@ const subscripcionController = {
         });
     },
     listarSubscripcion(req, res) {
-        Subscripcion.find({}).exec((err, subscripcion) => {
-            if (err) return res.status(500).send({ error: 'Internal Server Error' });
-            if (!subscripcion) return res.status(404).send({ error: 'Subscripcion Not Found' });
-            return res.status(200).send({ data: subscripcion });
-        });
+        Subscripcion.find({}).populate({ path: 'cajon', select: 'number', populate: { path: 'lote', select: 'name' } })
+            .populate({ path: 'vehiculo', select: '-__v', populate: { path: 'cliente', select: 'name' } }).exec((err, subscripcion) => {
+                if (err) return res.status(500).send({ error: 'Internal Server Error' });
+                if (!subscripcion) return res.status(404).send({ error: 'Subscripcion Not Found' });
+                return res.status(200).send({ data: subscripcion });
+            });
     },
     getSubscripcion(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
-        Subscripcion.findById(req.params.id).exec((err, subscripcion) => {
-            if (err) return res.status(500).send({ error: 'Internal Server Error' });
-            if (!subscripcion) return res.status(404).send({ error: 'Subscripcion Not Found' });
-            return res.status(200).send({ data: subscripcion });
-        });
+        Subscripcion.findById(req.params.id).populate({ path: 'cajon', select: 'number', populate: { path: 'lote', select: 'name' } })
+            .populate({ path: 'vehiculo', select: '-__v', populate: { path: 'cliente', select: 'name' } }).exec((err, subscripcion) => {
+                if (err) return res.status(500).send({ error: 'Internal Server Error' });
+                if (!subscripcion) return res.status(404).send({ error: 'Subscripcion Not Found' });
+                return res.status(200).send({ data: subscripcion });
+            });
     },
     updateSubscripcion(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
