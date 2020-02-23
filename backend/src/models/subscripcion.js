@@ -11,19 +11,21 @@ const Schema = mongoose.Schema;
 const subscripcionSchema = new Schema({
     vehiculo: {
         type: Schema.Types.ObjectId,
-        ref: 'Vehiculo'
+        ref: 'Vehiculo',
+        required: true
     },
     cajon: {
         type: Schema.Types.ObjectId,
-        ref: 'Cajon'
+        ref: 'Cajon',
+        required: true
     },
-    createdAt: {
+    start: {
         type: Date,
-        default: Date.now()
+        required: true
     },
-    updatedAt: {
+    end: {
         type: Date,
-        default: null
+        required: true
     }
 });
 

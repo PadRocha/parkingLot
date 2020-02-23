@@ -8,9 +8,7 @@ const Cajon = require('../models/cajon'); //* Calls cajon.js model
 
 const cajonController = {
     saveCajon(req, res) {
-        const newCajon = new Cajon(req.body, (err) => {
-            if (err) return res.status(400).send({ error: 'Bad Request' });
-        });
+        const newCajon = new Cajon(req.body);
         newCajon.save((err, cajonStored) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!cajonStored) return res.status(204).send({ error: 'Cajon No Content' });
@@ -35,7 +33,7 @@ const cajonController = {
     updateCajon(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
-        Cajon.findOneAndUpdate(req.params.id, req.body, (err, cajonUpdated) => {
+        Cajon.findByIdAndUpdate(req.params.id, req.body, (err, cajonUpdated) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!cajonUpdated) return res.status(404).send({ error: 'Cliente Not Found' });
             return res.status(200).send({ data: cajonUpdated });
@@ -43,7 +41,7 @@ const cajonController = {
     },
     deleteCajon(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
-        Cajon.findOneAndDelete(req.params.id, (err, cajonDeleted) => {
+        Cajon.findByIdAndDelete(req.params.id, (err, cajonDeleted) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!cajonDeleted) return res.status(404).send({ error: 'Cliente Not Found' });
             return res.status(200).send({ data: cajonDeleted });

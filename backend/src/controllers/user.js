@@ -10,9 +10,7 @@ const jwt = require('../services/jwt');
 const userController = {
     registerUser(req, res) {
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
-        const newUser = new User(req.body, (err) => {
-            if (err) return res.status(400).send({ error: 'Bad Request' });
-        });
+        const newUser = new User(req.body);
         newUser.save((err, userStored) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!userStored) return res.status(204).send({ error: 'User No Content' });

@@ -9,9 +9,7 @@ const Cliente = require('../models/cliente'); //* Calls cliente.js model
 const clienteController = {
     saveCliente(req, res) {
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
-        const newCliente = new Cliente(req.body, (err) => {
-            if (err) return res.status(400).send({ error: 'Bad Request' });
-        });
+        const newCliente = new Cliente(req.body);
         newCliente.image = req.file ? req.file.filename : null;
         newCliente.save((err, clienteStored) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
@@ -46,7 +44,7 @@ const clienteController = {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
         req.body.updatedAt = Date.now();
-        Cliente.findOneAndUpdate(req.params.id, req.body, (err, clienteUpdated) => {
+        Cliente.findByIdAndUpdate(req.params.id, req.body, (err, clienteUpdated) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!clienteUpdated) return res.status(404).send({ error: 'Cliente Not Found' });
             return res.status(200).send({ data: clienteUpdated });
@@ -54,7 +52,7 @@ const clienteController = {
     },
     deleteCliente(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
-        Cliente.findOneAndDelete(req.params.id, (err, clienteDeleted) => {
+        Cliente.findByIdAndDelete(req.params.id, (err, clienteDeleted) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!clienteDeleted) return res.status(404).send({ error: 'Cliente Not Found' });
             return res.status(200).send({ data: clienteDeleted });

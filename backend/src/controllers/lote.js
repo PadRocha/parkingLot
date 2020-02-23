@@ -16,9 +16,7 @@ const loteController = {
     },
     saveLote(req, res) {
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
-        const newLote = new Lote(req.body, (err) => {
-            if (err) return res.status(400).send({ error: 'Bad Request' });
-        });
+        const newLote = new Lote(req.body);
         newLote.save((err, loteStored) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!loteStored) return res.status(204).send({ error: 'Lote No Content' });
@@ -27,7 +25,7 @@ const loteController = {
     },
     getLote(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
-        Lote.find({ name: new RegExp(req.params.id, 'i') }, (err, lote) => {
+        Lote.findById(req.params.id).exec((err, lote) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!lote) return res.status(404).send({ error: 'Lote Not Found' });
             return res.status(200).send({ data: lote });
@@ -37,7 +35,7 @@ const loteController = {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
         // req.body.updatedAt = Date.now();
-        Lote.findOneAndUpdate(req.params.id, req.body, (err, loteUpdated) => {
+        Lote.findByIdAndUpdate(req.params.id, req.body, (err, loteUpdated) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!loteUpdated) return res.status(404).send({ error: 'Cliente Not Found' });
             return res.status(200).send({ data: loteUpdated });
@@ -45,7 +43,7 @@ const loteController = {
     },
     deleteLote(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
-        Lote.findOneAndDelete(req.params.id, (err, loteDeleted) => {
+        Lote.findByIdAndDelete(req.params.id, (err, loteDeleted) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!loteDeleted) return res.status(404).send({ error: 'Cliente Not Found' });
             return res.status(200).send({ data: loteDeleted });

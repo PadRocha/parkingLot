@@ -16,9 +16,7 @@ const vehiculoController = {
     },
     saveVehiculo(req, res) {
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
-        const newVehiculo = new Vehiculo(req.body, (err) => {
-            if (err) return res.status(400).send({ error: 'Bad Request' });
-        });
+        const newVehiculo = new Vehiculo(req.body);
         newVehiculo.save((err, vehiculoStored) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!vehiculoStored) return res.status(204).send({ error: 'Vehiculo No Content' });
@@ -36,7 +34,7 @@ const vehiculoController = {
     updateVehiculo(req, res) {
         if (!req.params.id) return res.status(400).send({ error: 'Bad Request' });
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
-        Vehiculo.findOneAndUpdate(req.params.id, req.body, (err, vehiculoUpdated) => {
+        Vehiculo.findByIdAndUpdate(req.params.id, req.body, (err, vehiculoUpdated) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!vehiculoUpdated) return res.status(404).send({ error: 'Vehiculo Not Found' });
             return res.status(200).send({ data: vehiculoUpdated });
