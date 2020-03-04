@@ -14,6 +14,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { ErrorComponent } from './components/error/error.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { ShowComponent } from './components/show/show.component';
 
 import { AuthService } from './services/auth.service';
 import { TokenInterceptorService } from './services/token-interceptor.service';
@@ -28,7 +29,8 @@ import { AuthGuard } from './guards/auth.guard';
     AdminComponent,
     ErrorComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    ShowComponent,
   ],
   imports: [
     BrowserModule,

@@ -11,9 +11,9 @@ exports.authorized = (req, res, next) => {
 
     try {
         var payload = jwt.verify(token, process.env.SECRET_KEY);
-        if (payload.exp <= moment().unix()) return res.status(401).send({ error: 'Unauthorized' });
+        if (payload.exp <= moment().unix()) return res.status(423).send({ error: 'The resource that is being accessed is locked' });
     } catch (error) {
-        return res.status(404).send({ error: 'Token Not Found' });
+        return res.status(409).send({ error: 'Indicates that the request could not be processed because of conflict in the current state of the resourcess' });
     }
 
     req.user = payload;
@@ -29,10 +29,10 @@ exports.authAdmin = (req, res, next) => {
 
     try {
         var payload = jwt.verify(token, process.env.SECRET_KEY);
-        if (payload.exp <= moment().unix()) return res.status(401).send({ error: 'Unauthorized' });
-        if (payload.role !== 'admin') return res.status(401).send({ error: 'Unauthorized' });
+        if (payload.exp <= moment().unix()) return res.status(423).send({ error: 'The resource that is being accessed is locked' });
+        if (payload.role !== 'admin') return res.status(423).send({ error: 'The resource that is being accessed is locked' });
     } catch (error) {
-        return res.status(404).send({ error: 'Token Not Found' });
+        return res.status(409).send({ error: 'Indicates that the request could not be processed because of conflict in the current state of the resourcess' });
     }
 
     req.user = payload;

@@ -2,6 +2,7 @@
 
 const express = require('express'); //* Calls express
 const cors = require('cors'); //* Calls cors
+const morgan = require('morgan'); //* Calls morgan
 const path = require('path'); //* Calls path
 const multer = require('multer'); //* Calls multer
 const uuidv4 = require('uuid/v4'); //* Calls uuid > v4 to random
@@ -25,7 +26,8 @@ const storage = multer.diskStorage({
 /*------------------------------------------------------------------*/
 
 app.use(cors());
-app.use(express.json());
+app.use(morgan('dev'));
+app.use(express.json({ limit: '1MB' }));
 app.use(multer({
     storage,
     dest: path.join(__dirname, 'uploads/images'),
@@ -40,7 +42,7 @@ app.use(multer({
         }
         cb("Error: File upload only supports the following filetypes - " + filetypes);
     },
-    limits: { fileSize: 1000000 },
+    limits: { fileSize: 500000 },
 }).single('image'));
 
 /*------------------------------------------------------------------*/

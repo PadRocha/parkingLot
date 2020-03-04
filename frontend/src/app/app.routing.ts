@@ -13,6 +13,7 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { ErrorComponent } from './components/error/error.component';
+import { ShowComponent } from './components/show/show.component'
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -25,6 +26,7 @@ const app: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+    { path: 'show', component: ShowComponent, canActivate: [AuthGuard] },
     { path: '**', component: ErrorComponent }
 ];
 

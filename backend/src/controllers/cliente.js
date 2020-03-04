@@ -11,6 +11,7 @@ const clienteController = {
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
         const newCliente = new Cliente(req.body);
         newCliente.image = req.file ? req.file.filename : null;
+        newCliente.avales = req.avales ? req.avales.split(',').forEach(e => { e.trim() }) : [];
         newCliente.save((err, clienteStored) => {
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!clienteStored) return res.status(204).send({ error: 'Cliente No Content' });

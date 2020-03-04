@@ -18,7 +18,6 @@ const loteController = {
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
         const newLote = new Lote(req.body);
         newLote.save((err, loteStored) => {
-            console.log("TCL: saveLote -> err", err)
             if (err) return res.status(500).send({ error: 'Internal Server Error' });
             if (!loteStored) return res.status(204).send({ error: 'Lote No Content' });
             return res.status(200).send({ data: loteStored });

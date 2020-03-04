@@ -12,37 +12,48 @@ const subscripcionController = {
     saveSubscripcion(req, res) {
         if (!req.body && !req.body.add1 && !req.body.add2) return res.status(400).send({ error: 'Bad Request' });
         const newSubscripcion = new Subscripcion(req.body);
-        Subscripcion.findOne({ vehiculo: newSubscripcion.vehiculo }).sort('-start').exec((err, subscripcion) => {
-            if (err) return res.status(500).send({ error: 'Internal Server Error' });
-            if (!subscripcion) {
+        delete newSubscripcion._id;
 
-                const Cajon = require('../models/cajon'); //* Calls cajon.js model
+        const Vehiculo = require('../models/vehiculo'); //* Calls vehiculo.js model
 
-                Cajon.findOne({ available: true }).exec((err, cajon) => {
-                    if (err) return res.status(500).send({ error: 'Internal Server Error' });
-                    if (!cajon) return res.status(404).send({ error: 'cajon Not available' });
-                    newSubscripcion.cajon = cajon._id;
-                    let date = Date.now();
-                    newSubscripcion.start = date;
-                    newSubscripcion.end = moment(date).add(req.body.add1, req.body.add2);
-                    newSubscripcion.save((err, subscripcionStored) => {
-                        if (err) return res.status(500).send({ error: 'Internal Server Error' });
-                        if (!subscripcionStored) return res.status(204).send({ error: 'Subscripcion No Content' });
-                        Cajon.findByIdAndUpdate(cajon._id, { available: false }, (err, cajonUpdated) => {
+        Vehiculo.findOne({ matricula: req.body.matricula }).select('_id').exec((err, vehiculo) => {
+            if (err) return res.status(500).send({ error: 'Vehiculo Internal Server Error' });
+            if (!vehiculo) return res.status(404).send({ error: 'vehiculo Not Found' });
+            Subscripcion.findOne({ vehiculo: vehiculo._id, end: { $gt: Date.now() } }).sort('-start').exec((err, subscripcion) => {
+                if (err) return res.status(500).send({ error: 'Subscripcion Internal Server Error' });
+                if (!subscripcion) { //* Verify susbscripcion doesnt exists
+
+                    const Cajon = require('../models/cajon'); //* Calls cajon.js model
+
+                    Cajon.findOne({ available: true }).exec((err, cajon) => {
+                        if (err) return res.status(500).send({ error: 'Cajon Internal Server Error' });
+                        if (!cajon) return res.status(404).send({ error: 'cajon Not available' });
+                        let date = Date.now();
+                        newSubscripcion.vehiculo = vehiculo._id;
+                        newSubscripcion.cajon = cajon._id;
+                        newSubscripcion.start = date;
+                        newSubscripcion.end = moment(date).add(req.body.add1, req.body.add2);
+                        newSubscripcion.save((err, subscripcionStored) => {
                             if (err) return res.status(500).send({ error: 'Internal Server Error' });
-                            if (!cajonUpdated) return res.status(404).send({ error: 'Cajon Not Found' });
-                            return res.status(200).send({ data: subscripcionStored });
+                            if (!subscripcionStored) return res.status(204).send({ error: 'Subscripcion No Content' });
+                            Cajon.findByIdAndUpdate(cajon._id, { available: false }, (err, cajonUpdated) => {
+                                if (err) return res.status(500).send({ error: 'Cajon Internal Server Error' });
+                                if (!cajonUpdated) return res.status(404).send({ error: 'Cajon Not Found' });
+                                return res.status(200).send({ data: subscripcionStored });
+                            });
                         });
                     });
-                });
-            }
-            newSubscripcion.cajon = subscripcion.cajon;
-            newSubscripcion.start = subscripcion.end;
-            newSubscripcion.end = moment(subscripcion.end).add(req.body.add1, req.body.add2);
-            newSubscripcion.save((err, subscripcionStored) => {
-                if (err) return res.status(500).send({ error: 'Internal Server Error' });
-                if (!subscripcionStored) return res.status(204).send({ error: 'Subscripcion No Content' });
-                return res.status(200).send({ data: subscripcionStored });
+                } else { //* Clone Subscripcion and add time
+                    newSubscripcion.vehiculo = subscripcion.vehiculo;
+                    newSubscripcion.cajon = subscripcion.cajon;
+                    newSubscripcion.start = subscripcion.end;
+                    newSubscripcion.end = moment(subscripcion.end).add(req.body.add1, req.body.add2);
+                    newSubscripcion.save((err, subscripcionStored) => {
+                        if (err) return res.status(500).send({ error: 'Update Internal Server Error' });
+                        if (!subscripcionStored) return res.status(204).send({ error: 'Subscripcion No Content' });
+                        return res.status(200).send({ data: subscripcionStored });
+                    });
+                }
             });
         });
     },
@@ -79,7 +90,7 @@ const subscripcionController = {
             if (!subscripcionDeleted) return res.status(404).send({ error: 'Subscripcion Not Found' });
             return res.status(200).send({ data: subscripcionDeleted });
         });
-    },
+    }
 };
 
 /*------------------------------------------------------------------*/

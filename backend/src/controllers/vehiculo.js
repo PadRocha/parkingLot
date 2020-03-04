@@ -17,15 +17,16 @@ const vehiculoController = {
     saveVehiculo(req, res) {
         if (!req.body) return res.status(400).send({ error: 'Bad Request' });
         const newVehiculo = new Vehiculo(req.body);
+        delete newVehiculo._id;
 
         const Cliente = require('../models/cliente'); //* Calls cliente.js model
 
-        Cliente.findOne({ name: new RegExp(req.body.name, 'i') }).exec((err, cliente) => {
-            if (err) return res.status(500).send({ error: 'Internal Server Error' });
+        Cliente.findOne({ name: req.body.name }).select('_id').exec((err, cliente) => {
+            if (err) return res.status(500).send({ error: 'Cliente Internal Server Error' });
             if (!cliente) return res.status(404).send({ error: 'Cliente Not Found' });
             newVehiculo.cliente = cliente._id;
             newVehiculo.save((err, vehiculoStored) => {
-                if (err) return res.status(500).send({ error: 'Internal Server Error' });
+                if (err) return res.status(500).send({ error: 'newVehiculo Internal Server Error' });
                 if (!vehiculoStored) return res.status(204).send({ error: 'Vehiculo No Content' });
                 return res.status(200).send({ data: vehiculoStored });
             });

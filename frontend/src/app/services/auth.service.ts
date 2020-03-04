@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router'
 import { Observable, of } from 'rxjs';
 import { User } from '../models/user';
@@ -41,5 +41,23 @@ export class AuthService {
 
   public loggedIn(): Boolean {
     return !!localStorage.getItem('token');
+  }
+
+  public verify(err): void {
+    if (err instanceof HttpErrorResponse) {
+      if (err.status === 403 || err.status === 409 || err.status === 423) {
+        this.logoutUser();
+      }
+    }
+  }
+
+  public verifyAdmin(err): void {
+    if (err instanceof HttpErrorResponse) {
+      if (err.status === 423) {
+        this._router.navigate(['/home']);
+      } else if (err.status === 403 || err.status === 409) {
+        this.logoutUser();
+      }
+    }
   }
 }

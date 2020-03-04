@@ -7,7 +7,7 @@
 export class Subscripcion {
     constructor(
         public _id: String,
-        public vehiculo: String,
+        public matricula: String,
         public add1: Number,
         public add2: String,
     ) { }

@@ -30,8 +30,8 @@ router.route('/login')
 /*------------------------------------------------------------------*/
 
 router.route('/cliente')
-    .get(clienteController.listarCliente)
-    .post(clienteController.saveCliente);
+    .get(mdAuth.authAdmin, clienteController.listarCliente)
+    .post(mdAuth.authorized, clienteController.saveCliente);
 
 router.route('/cliente/:id')
     .get(clienteController.getCliente)
@@ -73,7 +73,7 @@ router.route('/cajon/:id')
 
 router.route('/vehiculo')
     .get(vehiculoController.listarVehiculo)
-    .post(vehiculoController.saveVehiculo);
+    .post(mdAuth.authorized, vehiculoController.saveVehiculo);
 
 router.route('/vehiculo/:id')
     .get(vehiculoController.getVehiculo)
@@ -99,7 +99,7 @@ router.route('/registro/:id')
 
 router.route('/subscripcion')
     .get(subscripcionController.listarSubscripcion)
-    .post(subscripcionController.saveSubscripcion);
+    .post(mdAuth.authorized, subscripcionController.saveSubscripcion);
 
 router.route('/subscripcion/:id')
     .get(subscripcionController.getSubscripcion)

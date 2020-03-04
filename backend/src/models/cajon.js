@@ -12,7 +12,7 @@ const cajonSchema = new Schema({
     number: {
         type: Number,
         required: true,
-        unique: false
+        unique: true
     },
     available: {
         type: Boolean,

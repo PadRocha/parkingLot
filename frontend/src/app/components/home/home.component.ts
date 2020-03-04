@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
-// import {FormsModule} from '@angular/forms'
-
 import { Router } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, Observable } from 'rxjs';
 import { WebcamImage, WebcamInitError, WebcamUtil } from 'ngx-webcam';
+import { AuthService } from 'src/app/services/auth.service';
 import { ShippingService } from 'src/app/services/shipping.service';
 import { ArrivalsService } from 'src/app/services/arrivals.service';
 import { Cliente } from 'src/app/models/cliente';
@@ -33,7 +31,6 @@ export class HomeComponent implements OnInit {
   // Variables
   /*------------------------------------------------------------------*/
 
-  public color: String; //* Color default en Cliente Modal
   public closeResult: String; //* Mensaje de cierre Modal
   public myInnerHeight: Number = window.innerHeight - (window.innerHeight * .30); //* Tamaño de tabla
   public isMenuCollapsed: Boolean = true; //* Toogle Navbar
@@ -56,15 +53,17 @@ export class HomeComponent implements OnInit {
   constructor(
     private _modalService: NgbModal,
     private _router: Router,
-    private _shippingService: ShippingService
+    private _shippingService: ShippingService,
+    private _auth: AuthService
   ) {
-    this.clientes = new Cliente('', '', '', '', '', '', '');
-    this.vehiculos = new Vehiculo('', '', '', '', '', '');
-    this.registros = new Registro('', '');
-    this.subscripcions = new Subscripcion('', '', 1, '');
+    this.clientes = new Cliente('', '', '', '', 'CURP', '', '');
+    this.vehiculos = new Vehiculo(undefined, '', '', '', '#000000', '');
+    this.registros = new Registro(undefined, '');
+    this.subscripcions = new Subscripcion(undefined, '', 1, '');
   }
 
   ngOnInit(): void {
+    // console.log(this.colorDefault);
     WebcamUtil.getAvailableVideoInputs()
       .then((mediaDevices: MediaDeviceInfo[]) => {
         this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
@@ -94,7 +93,6 @@ export class HomeComponent implements OnInit {
   }
 
   public openCliente(cliente): void { //* Configura el modal especial del cliente
-    this.color = '#ffffff';
     this.showWebcam = true;
     this.webcamImage = null;
     this.open(cliente);
@@ -119,6 +117,7 @@ export class HomeComponent implements OnInit {
   public triggerSnapshot(): void { //* Toma la foto de la cámara
     this.trigger.next();
     this.toggleWebcam();
+
   }
 
   public handleInitError(error: WebcamInitError): void { //* Gestor de errores de la cámara
@@ -126,21 +125,14 @@ export class HomeComponent implements OnInit {
   }
 
   public turnToFile(): Blob { //* Convierte la imagen a Blob
-    var byteString;
-    if (this.webcamImage.imageAsDataUrl.split(',')[0].indexOf('base64') >= 0)
-      byteString = atob(this.webcamImage.imageAsDataUrl.split(',')[1]);
-    else
-      byteString = unescape(this.webcamImage.imageAsDataUrl.split(',')[1]);
-
-    // separate out the mime component
-    var mimeString = this.webcamImage.imageAsDataUrl.split(',')[0].split(':')[1].split(';')[0];
-
-    // write the bytes of the string to a typed array
-    var ia = new Uint8Array(byteString.length);
-    for (var i = 0; i < byteString.length; i++) {
+    let byteString;
+    if (this.webcamImage.imageAsDataUrl.split(',')[0].indexOf('base64') >= 0) byteString = atob(this.webcamImage.imageAsDataUrl.split(',')[1]);
+    else byteString = unescape(this.webcamImage.imageAsDataUrl.split(',')[1]);
+    let mimeString = this.webcamImage.imageAsDataUrl.split(',')[0].split(':')[1].split(';')[0];
+    let ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
-
     return new Blob([ia], { type: mimeString });
   }
 
@@ -148,20 +140,42 @@ export class HomeComponent implements OnInit {
   // Submits
   /*------------------------------------------------------------------*/
 
-  public onSubmitCliente(form) {
-    let fd: any = new FormData();
-    fd.append('name', this.clientes.name);
-    fd.append('phone', this.clientes.phone);
-    fd.append('license', this.clientes.license);
-    fd.append('typeLicense', this.clientes.typeLicense);
-    fd.append('image', this.turnToFile());
-    fd.append('avales', this.clientes.avales)
-    this._shippingService.cliente(fd).subscribe(
+  public onSubmitCliente(form): void {
+    this._shippingService.sendCliente(this.clientes, this.turnToFile()).subscribe(
       res => {
-        console.log(res);
-
+        // console.log(res);
+        this.webcamImage = null;
+        form.reset();
+        this.toggleWebcam();
       },
       err => {
+        this._auth.verify(err);
+        console.log(<any>err);
+      }
+    );
+  }
+
+  public onSubmitVehiculo(form): void {
+    this._shippingService.sendVehiculo(this.vehiculos).subscribe(
+      res => {
+        form.reset();
+        console.log(res);
+      },
+      err => {
+        this._auth.verify(err);
+        console.log(<any>err);
+      }
+    );
+  }
+
+  public onSubmitSubscripcion(form): void {
+    this._shippingService.sendSubscripcion(this.subscripcions).subscribe(
+      res => {
+        form.reset();
+        console.log(res);
+      },
+      err => {
+        this._auth.verify(err);
         console.log(<any>err);
       }
     );

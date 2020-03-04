@@ -6,7 +6,7 @@ require('./database');
 
 const app = require('./app');
 
-(async function () {
+(async () => {
     await app.listen(app.get('port'));
     console.log('server', app.get('port'));
 })();
