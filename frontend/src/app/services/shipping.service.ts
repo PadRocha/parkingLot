@@ -6,7 +6,7 @@ import { Vehiculo } from '../models/vehiculo';
 import { Subscripcion } from '../models/subscripcion';
 import { Registro } from '../models/registro';
 
-import { Global } from './global';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class ShippingService {
   constructor(
     public _http: HttpClient
   ) {
-    this.url = Global.url;
+    this.url = environment.url;
   }
 
   sendRegistro(registro: Registro): Observable<any> {

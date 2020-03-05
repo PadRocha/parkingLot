@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Router } from '@angular/router'
 import { Observable, of } from 'rxjs';
 import { User } from '../models/user';
-import { Global } from '../services/global';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class AuthService {
     private _http: HttpClient,
     private _router: Router
   ) {
-    this.url = Global.url;
+    this.url = environment.url;
   }
 
   // public registerUser(user: User): Observable<any> {

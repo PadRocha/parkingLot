@@ -211,10 +211,10 @@
             <tr *ngFor="let registro of registros">
                 <td>
                     <p class="text-nowrap text-left d-inline float-left d-md-flex justify-content-md-start">
-                        <span class="icon" [style.background]="'red'">
+                        <span class="icon" [style.background]="invertHex(registro['vehiculo'].color, false)">
                             <i class="fa fa-car" [style.color]="registro['vehiculo'].color"></i>
                         </span>
-                        <strong>&nbsp;Nombre</strong>: {{registro['vehiculo']['cliente'].name}}&nbsp;
+                        <strong>&nbsp;Nombre</strong>: {{registro['vehiculo']['cliente'].name | titlecase}}&nbsp;
                         <strong>Matricula</strong>: {{registro['vehiculo'].matricula}}&nbsp;
                         <strong>Tipo</strong>: {{registro['vehiculo'].tipo}}&nbsp;
                         <strong>Modelo</strong>: {{registro['vehiculo'].modelo}}.
