@@ -1,4 +1,4 @@
-<ng-template #registro let-modal>
+<ng-template #registroModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title">Agrega registro</h4>
     </div>
@@ -22,7 +22,7 @@
         <button type="button" class="btn btn-primary">Guardar cambios</button>
     </div>
 </ng-template>
-<ng-template #cliente let-modal>
+<ng-template #clienteModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title">Registro cliente</h4>
     </div>
@@ -48,33 +48,33 @@
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">
-                        <input type="text" class="form-control" name="name" #name="ngModel" [(ngModel)]="clientes.name"
+                        <input type="text" class="form-control" name="name" #name="ngModel" [(ngModel)]="cliente.name"
                             placeholder="Nombre"
                             oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
                             [attr.disabled]="!webcamImage?'':null" required />
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" name="phone" #phone="ngModel"
-                            [(ngModel)]="clientes.phone" placeholder="Teléfono de referencia"
+                            [(ngModel)]="cliente.phone" placeholder="Teléfono de referencia"
                             [attr.disabled]="!webcamImage?'':null" required />
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
                         <input type="text" class="form-control" name="license" #license="ngModel"
-                            [(ngModel)]="clientes.license" oninput="this.value = this.value.toUpperCase()"
+                            [(ngModel)]="cliente.license" oninput="this.value = this.value.toUpperCase()"
                             placeholder="Licencia" [attr.disabled]="!webcamImage?'':null" required />
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" name="typeLicense" #typeLicense="ngModel"
-                            [(ngModel)]="clientes.typeLicense" placeholder="Conducir"
+                            [(ngModel)]="cliente.typeLicense" placeholder="Conducir"
                             [attr.disabled]="!webcamImage?'':null" required />
                     </div>
                 </div>
                 <div class="col-12">
                     <div class="form-group">
                         <input type="text" class="form-control" name="avales" #avales="ngModel"
-                            [(ngModel)]="clientes.avales" placeholder="Aval1, Aval2, Aval3..."
+                            [(ngModel)]="cliente.avales" placeholder="Aval1, Aval2, Aval3..."
                             [attr.disabled]="!webcamImage?'':null" />
                     </div>
                 </div>
@@ -87,7 +87,7 @@
         </div>
     </form>
 </ng-template>
-<ng-template #vehiculo let-modal>
+<ng-template #vehiculoModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title">Registro vehiculo</h4>
     </div>
@@ -97,11 +97,11 @@
                 <div class="col-6">
                     <div class="form-group">
                         <input type="text" class="form-control" name="matricula" #matricula="ngModel"
-                            [(ngModel)]="vehiculos.matricula" placeholder="Matricula"
+                            [(ngModel)]="vehiculo.matricula" placeholder="Matricula"
                             oninput="this.value = this.value.toUpperCase().normalize('NFD')" required />
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="name" #name="ngModel" [(ngModel)]="vehiculos.name"
+                        <input type="text" class="form-control" name="name" #name="ngModel" [(ngModel)]="vehiculo.name"
                             placeholder="Nombre Cliente"
                             oninput="this.value = this.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
                             required />
@@ -109,17 +109,17 @@
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <input type="text" class="form-control" name="tipo" #tipo="ngModel" [(ngModel)]="vehiculos.tipo"
+                        <input type="text" class="form-control" name="tipo" #tipo="ngModel" [(ngModel)]="vehiculo.tipo"
                             placeholder="Tipo" required />
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" name="modelo" #modelo="ngModel"
-                            [(ngModel)]="vehiculos.modelo" placeholder="Modelo" required />
+                            [(ngModel)]="vehiculo.modelo" placeholder="Modelo" required />
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="text" [(colorPicker)]="vehiculos.color"
-                            [style.background]="vehiculos.color" [cpPosition]="'bottom'" [cpAlphaChannel]="'disabled'"
-                            name="color" #color="ngModel" [(ngModel)]="vehiculos.color" placeholder="Color" required />
+                        <input class="form-control" type="text" [(colorPicker)]="vehiculo.color"
+                            [style.background]="vehiculo.color" [cpPosition]="'bottom'" [cpAlphaChannel]="'disabled'"
+                            name="color" #color="ngModel" [(ngModel)]="vehiculo.color" placeholder="Color" required />
                     </div>
                 </div>
             </form>
@@ -130,7 +130,7 @@
         </div>
     </form>
 </ng-template>
-<ng-template #subscripcion let-modal>
+<ng-template #subscripcionModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title">Registro Subscripción</h4>
     </div>
@@ -139,20 +139,19 @@
             <form class="row" action="" method="POST">
                 <div class="col-6">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="vehiculo" />
+                        <input type="text" class="form-control" name="matricula" #matricula="ngModel"
+                            [(ngModel)]="subscripcion.matricula" placeholder="Matricula"
+                            oninput="this.value = this.value.toUpperCase().normalize('NFD')" required />
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <input type="number" class="form-control" [(ngModel)]="subscripcions.add1" placeholder="N°" />
+                        <input type="number" class="form-control" name="add1" #add1="ngModel"
+                            [(ngModel)]="subscripcion.add1" placeholder="N°" />
                     </div>
                     <div class="form-group">
-                        <select class="form-control" [(ngModel)]="subscripcions.add2">
-                            <option [ngValue]="'hours'">horas</option>
-                            <option [ngValue]="'days'">días</option>
-                            <option [ngValue]="'weeks'">semanas</option>
-                            <option [ngValue]="'months'">Meses</option>
-                            <option [ngValue]="'years'">Años</option>
+                        <select class="form-control" name="add2" #add2="ngModel" [(ngModel)]="subscripcion.add2">
+                            <option *ngFor="let key of objectKeys(times)" [value]="key">{{times[key]}}</option>
                         </select>
                     </div>
                 </div>
@@ -160,7 +159,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="modal.close('Save click')">Cerrar</button>
-            <button type="button" class="btn btn-primary">Guardar cambios</button>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
         </div>
     </form>
 </ng-template>
@@ -185,18 +184,16 @@
                 <li ngbDropdown class="nav-item">
                     <a class="nav-link" id="parkingLot" ngbDropdownToggle>Lotes&nbsp;</a>
                     <div ngbDropdownMenu aria-labelledby="parkingLot">
-                        <button ngbDropdownItem>A</button>
-                        <button ngbDropdownItem>B</button>
-                        <button ngbDropdownItem>C</button>
+                        <button *ngFor="let lote of lotes" ngbDropdownItem>{{lote.name}}</button>
                     </div>
                 </li>
                 <li ngbDropdown class="nav-item">
                     <a class="nav-link" id="parkingLot" ngbDropdownToggle>Agregar&nbsp;</a>
                     <div ngbDropdownMenu aria-labelledby="parkingLot">
-                        <button ngbDropdownItem (click)="open(registro)">Registro</button>
-                        <button ngbDropdownItem (click)="openCliente(cliente)">Cliente</button>
-                        <button ngbDropdownItem (click)="open(vehiculo)">Vehículo</button>
-                        <button ngbDropdownItem (click)="open(subscripcion)">Subscripción</button>
+                        <button ngbDropdownItem (click)="open(registroModal)">Registro</button>
+                        <button ngbDropdownItem (click)="openCliente(clienteModal)">Cliente</button>
+                        <button ngbDropdownItem (click)="open(vehiculoModal)">Vehículo</button>
+                        <button ngbDropdownItem (click)="open(subscripcionModal)">Subscripción</button>
                     </div>
                 </li>
             </ul>
@@ -211,17 +208,16 @@
             </tr>
         </thead>
         <tbody [style.height.px]="myInnerHeight">
-            <tr>
+            <tr *ngFor="let registro of registros">
                 <td>
                     <p class="text-nowrap text-left d-inline float-left d-md-flex justify-content-md-start">
-                        <span class="icon">
-                            <i class="fa fa-car" [style.color]="'black'"></i>
+                        <span class="icon" [style.background]="'red'">
+                            <i class="fa fa-car" [style.color]="registro['vehiculo'].color"></i>
                         </span>
-                        <strong>&nbsp;Nombre</strong>: &nbsp;
-                        <strong>Puesto</strong>: &nbsp;
-                        <strong>Placa</strong>: &nbsp;
-                        <strong>Tipo</strong>: &nbsp;
-                        <strong>Modelo</strong>: .
+                        <strong>&nbsp;Nombre</strong>: {{registro['vehiculo']['cliente'].name}}&nbsp;
+                        <strong>Matricula</strong>: {{registro['vehiculo'].matricula}}&nbsp;
+                        <strong>Tipo</strong>: {{registro['vehiculo'].tipo}}&nbsp;
+                        <strong>Modelo</strong>: {{registro['vehiculo'].modelo}}.
                     </p>
                     <div class="float-right">
                         <span class="badge badge-primary contador">0000-00-00 00:00:00</span>

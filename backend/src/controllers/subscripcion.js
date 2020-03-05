@@ -10,7 +10,7 @@ const Subscripcion = require('../models/subscripcion'); //* Calls subscripcion.j
 
 const subscripcionController = {
     saveSubscripcion(req, res) {
-        if (!req.body && !req.body.add1 && !req.body.add2) return res.status(400).send({ error: 'Bad Request' });
+        if (!req.body && !req.body.matricula && !req.body.add1 && !req.body.add2) return res.status(400).send({ error: 'Bad Request' });
         const newSubscripcion = new Subscripcion(req.body);
         delete newSubscripcion._id;
 
@@ -18,14 +18,14 @@ const subscripcionController = {
 
         Vehiculo.findOne({ matricula: req.body.matricula }).select('_id').exec((err, vehiculo) => {
             if (err) return res.status(500).send({ error: 'Vehiculo Internal Server Error' });
-            if (!vehiculo) return res.status(404).send({ error: 'vehiculo Not Found' });
+            if (!vehiculo) return res.status(404).send({ error: 'Unauthorized Vehiculo' });
             Subscripcion.findOne({ vehiculo: vehiculo._id, end: { $gt: Date.now() } }).sort('-start').exec((err, subscripcion) => {
                 if (err) return res.status(500).send({ error: 'Subscripcion Internal Server Error' });
                 if (!subscripcion) { //* Verify susbscripcion doesnt exists
 
                     const Cajon = require('../models/cajon'); //* Calls cajon.js model
 
-                    Cajon.findOne({ available: true }).exec((err, cajon) => {
+                    Cajon.findOne({ available: true }).select('_id').exec((err, cajon) => {
                         if (err) return res.status(500).send({ error: 'Cajon Internal Server Error' });
                         if (!cajon) return res.status(404).send({ error: 'cajon Not available' });
                         let date = Date.now();

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-// import { Project } from '../models/project';
 import { Global } from './global';
 
 @Injectable({
@@ -16,5 +15,11 @@ export class ArrivalsService {
     this.url = Global.url;
   }
 
+  getLotes(): Observable<any> {
+    return this._http.get(this.url + 'lote');
+  }
 
+  getRegistros(): Observable<any> {
+    return this._http.get(this.url + 'registro');
+  }
 }

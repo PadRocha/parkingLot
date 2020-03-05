@@ -99,7 +99,7 @@ router.route('/registro/:id')
 
 router.route('/subscripcion')
     .get(subscripcionController.listarSubscripcion)
-    .post(mdAuth.authorized, subscripcionController.saveSubscripcion);
+    .post(subscripcionController.saveSubscripcion);
 
 router.route('/subscripcion/:id')
     .get(subscripcionController.getSubscripcion)

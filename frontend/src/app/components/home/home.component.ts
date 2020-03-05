@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+// import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, Observable } from 'rxjs';
 import { WebcamImage, WebcamInitError, WebcamUtil } from 'ngx-webcam';
@@ -10,6 +10,8 @@ import { Cliente } from 'src/app/models/cliente';
 import { Vehiculo } from 'src/app/models/vehiculo';
 import { Registro } from 'src/app/models/registro';
 import { Subscripcion } from 'src/app/models/subscripcion';
+import { Lote } from 'src/app/models/lote';
+declare let alertify: any;
 
 @Component({
   selector: 'app-home',
@@ -19,13 +21,20 @@ import { Subscripcion } from 'src/app/models/subscripcion';
 })
 export class HomeComponent implements OnInit {
   /*------------------------------------------------------------------*/
+  // Object Arrays
+  /*------------------------------------------------------------------*/
+
+  public lotes: Array<Lote>;
+  public registros: Array<Registro>;
+
+  /*------------------------------------------------------------------*/
   // Forms
   /*------------------------------------------------------------------*/
 
-  public clientes: Cliente;
-  public vehiculos: Vehiculo;
-  public registros: Registro;
-  public subscripcions: Subscripcion;
+  public cliente: Cliente;
+  public vehiculo: Vehiculo;
+  public registro: Registro;
+  public subscripcion: Subscripcion;
 
   /*------------------------------------------------------------------*/
   // Variables
@@ -34,13 +43,15 @@ export class HomeComponent implements OnInit {
   public closeResult: String; //* Mensaje de cierre Modal
   public myInnerHeight: Number = window.innerHeight - (window.innerHeight * .30); //* Tamaño de tabla
   public isMenuCollapsed: Boolean = true; //* Toogle Navbar
+  public objectKeys = Object.keys;
+  public times: Object;
 
   /*------------------------------------------------------------------*/
   // Variables Cámara
   /*------------------------------------------------------------------*/
 
-  public showWebcam: Boolean;
-  public multipleWebcamsAvailable: Boolean = false;
+  public showWebcam: boolean;
+  public multipleWebcamsAvailable: boolean = false;
   public errorsCamera: WebcamInitError[] = [];
   public webcamImage: WebcamImage = null;
   public errors: WebcamInitError[] = [];
@@ -52,22 +63,59 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private _modalService: NgbModal,
-    private _router: Router,
+    // private _router: ActivatedRoute,
+    private _arrivalService: ArrivalsService,
     private _shippingService: ShippingService,
     private _auth: AuthService
   ) {
-    this.clientes = new Cliente('', '', '', '', 'CURP', '', '');
-    this.vehiculos = new Vehiculo(undefined, '', '', '', '#000000', '');
-    this.registros = new Registro(undefined, '');
-    this.subscripcions = new Subscripcion(undefined, '', 1, '');
+    this.cliente = new Cliente('', '', '', '', 'CURP', '', '');
+    this.vehiculo = new Vehiculo(undefined, '', '', '', '#000000', '');
+    this.registro = new Registro(undefined, '');
+    this.subscripcion = new Subscripcion(undefined, '', 1, '');
+    this.times = { hours: 'Hora', days: 'Días', weeks: 'Semanas', months: 'Meses', years: 'Años' };
   }
 
   ngOnInit(): void {
-    // console.log(this.colorDefault);
     WebcamUtil.getAvailableVideoInputs()
       .then((mediaDevices: MediaDeviceInfo[]) => {
         this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
       });
+    this.getLotes();
+    this.getRegistros();
+  }
+
+  /*------------------------------------------------------------------*/
+  // Charge on initial
+  /*------------------------------------------------------------------*/
+
+  private getLotes(): void {
+    this._arrivalService.getLotes().subscribe(
+      res => {
+        if (res.data) {
+          this.lotes = res.data;
+        }
+      },
+      err => {
+        this._auth.verify(err);
+        console.log(<any>err);
+
+      }
+    );
+  }
+
+  private getRegistros(): void {
+    this._arrivalService.getRegistros().subscribe(
+      res => {
+        if (res.data) {
+          this.registros = res.data;
+        }
+      },
+      err => {
+        this._auth.verify(err);
+        console.log(<any>err);
+
+      }
+    );
   }
 
   /*------------------------------------------------------------------*/
@@ -92,10 +140,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  public openCliente(cliente): void { //* Configura el modal especial del cliente
+  public openCliente(clienteModal): void { //* Configura el modal especial del cliente
     this.showWebcam = true;
     this.webcamImage = null;
-    this.open(cliente);
+    this.open(clienteModal);
   }
 
   /*------------------------------------------------------------------*/
@@ -124,7 +172,7 @@ export class HomeComponent implements OnInit {
     this.errorsCamera.push(error);
   }
 
-  public turnToFile(): Blob { //* Convierte la imagen a Blob
+  private turnToFile(): Blob { //* Convierte la imagen a Blob
     let byteString;
     if (this.webcamImage.imageAsDataUrl.split(',')[0].indexOf('base64') >= 0) byteString = atob(this.webcamImage.imageAsDataUrl.split(',')[1]);
     else byteString = unescape(this.webcamImage.imageAsDataUrl.split(',')[1]);
@@ -140,8 +188,33 @@ export class HomeComponent implements OnInit {
   // Submits
   /*------------------------------------------------------------------*/
 
+  public onSubmitRegistro(form): void {
+    this._shippingService.sendSubscripcion(this.subscripcion).subscribe(
+      res => {
+        alertify.alert().setting({
+          'title': 'Supscripción guardada',
+          'label': 'Ok',
+          'message': `Subscripción >${res.data._id} ha sido guardada`,
+          'onok': function () { alertify.success('Great'); }
+        }).show();
+        form.reset();
+        // console.log(res);
+      },
+      err => {
+        this._auth.verify(err);
+        alertify.alert().setting({
+          'title': 'Supscripción no guardada',
+          'label': 'Ok',
+          'message': `>${err.error.error}`,
+          'onok': function () { alertify.error('Damn it'); }
+        }).show();
+        // console.log(<any>err);
+      }
+    );
+  }
+
   public onSubmitCliente(form): void {
-    this._shippingService.sendCliente(this.clientes, this.turnToFile()).subscribe(
+    this._shippingService.sendCliente(this.cliente, this.turnToFile()).subscribe(
       res => {
         // console.log(res);
         this.webcamImage = null;
@@ -156,7 +229,7 @@ export class HomeComponent implements OnInit {
   }
 
   public onSubmitVehiculo(form): void {
-    this._shippingService.sendVehiculo(this.vehiculos).subscribe(
+    this._shippingService.sendVehiculo(this.vehiculo).subscribe(
       res => {
         form.reset();
         console.log(res);
@@ -169,14 +242,25 @@ export class HomeComponent implements OnInit {
   }
 
   public onSubmitSubscripcion(form): void {
-    this._shippingService.sendSubscripcion(this.subscripcions).subscribe(
+    this._shippingService.sendSubscripcion(this.subscripcion).subscribe(
       res => {
+        alertify.alert().setting({
+          'title': 'Supscripción guardada',
+          'label': 'Ok',
+          'message': `Subscripción >${res.data._id} ha sido guardada`,
+          'onok': function () { alertify.success('Great'); }
+        }).show();
         form.reset();
-        console.log(res);
+        // console.log(res);
       },
       err => {
         this._auth.verify(err);
-        console.log(<any>err);
+        alertify.alert().setting({
+          'title': 'Supscripción no guardada',
+          'label': 'Ok',
+          'message': `>${err.error.error}`,
+          'onok': function () { alertify.error('Damn it'); }
+        }).show();
       }
     );
   }

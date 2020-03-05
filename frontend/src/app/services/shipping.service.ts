@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { Cliente } from '../models/cliente';
 import { Vehiculo } from '../models/vehiculo';
 import { Subscripcion } from '../models/subscripcion';
+import { Registro } from '../models/registro';
 
 import { Global } from './global';
 
@@ -17,6 +18,12 @@ export class ShippingService {
     public _http: HttpClient
   ) {
     this.url = Global.url;
+  }
+
+  sendRegistro(registro: Registro): Observable<any> {
+    let params = JSON.stringify(registro),
+      headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this._http.post(this.url + 'registro', params, { headers: headers });
   }
 
   sendCliente(cliente: Cliente, image: Blob): Observable<any> {
