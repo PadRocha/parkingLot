@@ -241,15 +241,16 @@ export class HomeComponent implements OnInit {
   /*------------------------------------------------------------------*/
 
   public onSubmitRegistro(form): void {
-    this._shipping.sendSubscripcion(this.subscripcion).subscribe(
+    this._shipping.sendRegistro(this.registro).subscribe(
       res => {
         alertify.alert().setting({
           'title': 'Supscripción guardada',
           'label': 'Ok',
-          'message': `Subscripción >${res.data._id} ha sido guardada`,
+          'message': `Registro >${res.data._id} ha sido guardado`,
           'onok': function () { alertify.success('Great'); }
         }).show();
         form.reset();
+        this.getRegistros();
         // console.log(res);
       },
       err => {
