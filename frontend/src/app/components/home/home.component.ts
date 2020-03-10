@@ -3,9 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, Observable } from 'rxjs';
 import { WebcamImage, WebcamInitError, WebcamUtil } from 'ngx-webcam';
+import { SocketService } from 'src/app/services/socket.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ShippingService } from 'src/app/services/shipping.service';
 import { ArrivalsService } from 'src/app/services/arrivals.service';
+import { ShippingService } from 'src/app/services/shipping.service';
 import { Cliente } from 'src/app/models/cliente';
 import { Vehiculo } from 'src/app/models/vehiculo';
 import { Registro } from 'src/app/models/registro';
@@ -64,9 +65,10 @@ export class HomeComponent implements OnInit {
   constructor(
     private _modalService: NgbModal,
     // private _router: ActivatedRoute,
-    private _arrivalService: ArrivalsService,
-    private _shippingService: ShippingService,
-    private _auth: AuthService
+    private _socketService: SocketService,
+    private _auth: AuthService,
+    private _arrival: ArrivalsService,
+    private _shipping: ShippingService
   ) {
     this.cliente = new Cliente('', '', '', '', 'CURP', '', '');
     this.vehiculo = new Vehiculo(undefined, '', '', '', '#000000', '');
@@ -82,6 +84,9 @@ export class HomeComponent implements OnInit {
       });
     this.getLotes();
     this.getRegistros();
+    // this._socketService.listen('bye').subscribe(data => {
+    //   console.log(data);
+    // });
   }
 
   /*------------------------------------------------------------------*/
@@ -89,7 +94,7 @@ export class HomeComponent implements OnInit {
   /*------------------------------------------------------------------*/
 
   private getLotes(): void {
-    this._arrivalService.getLotes().subscribe(
+    this._arrival.getLotes().subscribe(
       res => {
         if (res.data) {
           this.lotes = res.data;
@@ -104,7 +109,7 @@ export class HomeComponent implements OnInit {
   }
 
   private getRegistros(): void {
-    this._arrivalService.getRegistros().subscribe(
+    this._arrival.getRegistros().subscribe(
       res => {
         if (res.data) {
           this.registros = res.data;
@@ -189,6 +194,10 @@ export class HomeComponent implements OnInit {
     this.open(clienteModal);
   }
 
+  public counter(id: string) {
+
+  }
+
   /*------------------------------------------------------------------*/
   // Funciones cámara
   /*------------------------------------------------------------------*/
@@ -232,7 +241,7 @@ export class HomeComponent implements OnInit {
   /*------------------------------------------------------------------*/
 
   public onSubmitRegistro(form): void {
-    this._shippingService.sendSubscripcion(this.subscripcion).subscribe(
+    this._shipping.sendSubscripcion(this.subscripcion).subscribe(
       res => {
         alertify.alert().setting({
           'title': 'Supscripción guardada',
@@ -257,7 +266,7 @@ export class HomeComponent implements OnInit {
   }
 
   public onSubmitCliente(form): void {
-    this._shippingService.sendCliente(this.cliente, this.turnToFile()).subscribe(
+    this._shipping.sendCliente(this.cliente, this.turnToFile()).subscribe(
       res => {
         // console.log(res);
         this.webcamImage = null;
@@ -272,7 +281,7 @@ export class HomeComponent implements OnInit {
   }
 
   public onSubmitVehiculo(form): void {
-    this._shippingService.sendVehiculo(this.vehiculo).subscribe(
+    this._shipping.sendVehiculo(this.vehiculo).subscribe(
       res => {
         form.reset();
         console.log(res);
@@ -285,7 +294,7 @@ export class HomeComponent implements OnInit {
   }
 
   public onSubmitSubscripcion(form): void {
-    this._shippingService.sendSubscripcion(this.subscripcion).subscribe(
+    this._shipping.sendSubscripcion(this.subscripcion).subscribe(
       res => {
         alertify.alert().setting({
           'title': 'Supscripción guardada',

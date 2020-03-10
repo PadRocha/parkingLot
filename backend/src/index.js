@@ -17,8 +17,9 @@ const app = require('./app');
     // console.log("io", io)
     io.on('connection', socket => {
         console.log('new Connection');
-        socket.emit('hello', {
-            greetting: 'Hello Paul'
+        socket.on("disconnect", () => {
+            console.log("Disconnected")
         });
+        socket.emit('bye', 'hello, bro');
     });
 })();

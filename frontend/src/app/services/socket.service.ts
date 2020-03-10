@@ -10,7 +10,7 @@ export class SocketService {
   socket: io;
 
   constructor() {
-    this.socket = io(environment.url);
+    this.socket = io(environment.socket);
   }
 
   listen(eventName: string): Observable<any> {

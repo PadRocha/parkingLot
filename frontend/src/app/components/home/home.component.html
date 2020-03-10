@@ -2,25 +2,26 @@
     <div class="modal-header">
         <h4 class="modal-title">Agrega registro</h4>
     </div>
-    <div class="modal-body">
-        <form class="row" action="" method="POST">
+    <form (ngSubmit)="onSubmitRegistro(registroForm)" #registroForm="ngForm">
+        <div class="modal-body">
             <div class="col-6">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Matricula" />
+                    <input type="text" class="form-control" name="matricula" #matricula="ngModel"
+                        [(ngModel)]="registro.matricula" placeholder="Matricula" />
                 </div>
             </div>
             <!-- <div class="col-6">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="" />
-                </div>
-            </div> -->
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary"
-            (click)="toggleWebcam();modal.close('Save click')">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar cambios</button>
-    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="" />
+                    </div>
+                </div> -->
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+                (click)="toggleWebcam();modal.close('Save click')">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+    </form>
 </ng-template>
 <ng-template #clienteModal let-modal>
     <div class="modal-header">
@@ -220,7 +221,8 @@
                         <strong>Modelo</strong>: {{registro['vehiculo'].modelo}}.
                     </p>
                     <div class="float-right">
-                        <span class="badge badge-primary contador">0000-00-00 00:00:00</span>
+                        <span class="badge badge-primary contador" onload="counter(registro._id)">0000-00-00
+                            00:00:00</span>
                         <a class="btn btn-danger btn-sm text-right d-inline-block">
                             Finalizar <i class="fas fa-sign-out-alt"></i>
                         </a>
