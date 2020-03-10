@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { Global } from './global';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class ArrivalsService {
   constructor(
     public _http: HttpClient
   ) {
-    this.url = Global.url;
+    this.url = environment.url;
   }
 
   getLotes(): Observable<any> {
